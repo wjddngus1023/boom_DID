@@ -21,7 +21,7 @@ from indy.error import IndyError, ErrorCode
 
 from utils import get_pool_genesis_txn_path, PROTOCOL_VERSION
 
-pool_name = 'BoomLedgerPool'
+pool_name = 'pool'
 genesis_file_path = get_pool_genesis_txn_path(pool_name)
 
 wallet_config = json.dumps({"id": "wallet"})
@@ -77,7 +77,7 @@ async def write_nym_and_query_verkey():
         trust_anchor_did, trust_anchor_verkey = await did.create_and_store_my_did(wallet_handle, "{}")
         print_log('Trust anchor DID: ', trust_anchor_did)
         print_log('Trust anchor Verkey: ', trust_anchor_verkey)
-
+        return("did:"+trust_anchor_did+"\n Verkey : "+trust_anchor_verkey)
         # 7.
         print_log('\n7. Building NYM request to add Trust Anchor to the ledger\n')
         nym_transaction_request = await ledger.build_nym_request(submitter_did=steward_did,
@@ -125,7 +125,21 @@ async def write_nym_and_query_verkey():
         print_log('Written by Steward: ', trust_anchor_verkey)
         verkey_from_ledger = json.loads(get_nym_response['result']['data'])['verkey']
         print_log('Queried from ledger: ', verkey_from_ledger)
-        print('Writng DID is done :)')
+        print_log('Matching: ', verkey_from_ledger == trust_anchor_verkey)
+
+        # 13.
+        print_log('\n13. Closing wallet and pool\n')
+        await wallet.close_wallet(wallet_handle)
+        await pool.close_pool_ledger(pool_handle)
+
+        # 14.
+        print_log('\n14. Deleting created wallet\n')
+        await wallet.delete_wallet(wallet_config, wallet_credentials)
+
+        # 15.
+        print_log('\n15. Deleting pool ledger config\n')
+        await pool.delete_pool_ledger_config(pool_name)
+
     except IndyError as e:
         print('Error occurred: %s' % e)
 

@@ -30,32 +30,33 @@ def print_log(value_color="", value_noncolor=""):
 app = Flask(__name__)
 
 @app.route("/")
-def main():
+async def main():
 	return "<h1>Hello world!</h1>"
 
 @app.route("/writedid")
-def func1():
-	fn1.write_nym_and_query_verkey()
-	return "<h1>Wrting DID</h1>"
+async def func1():
+	a = await fn1.write_nym_and_query_verkey()
+	print(a)
+	return a
 
 @app.route("/rotatekey")
-def func2():
-	fn2.rotate_key_on_the_ledger()
+async def func2():
+	await fn2.rotate_key_on_the_ledger()
 	return "<h1>rotate_key</h1>"
 
 @app.route("/saveschema")
-def func3():
-	fn3.write_schema_and_cred_def()
+async def func3():
+	await fn3.write_schema_and_cred_def()
 	return "<h1>save schema</h1>"
 
 @app.route("/negotiate")
-def func4():
-	fn4.proof_negotiation()
+async def func4():
+	await fn4.proof_negotiation()
 	return "<h1>negotiate<h1>"
 
 @app.route("/issuecredential")
-def func5():
-	fn5.issue_credential()
+async def func5():
+	await fn5.issue_credential()
 	return "<h1>issue credential<h1>"
 
 @app.route("/sendmessage")
