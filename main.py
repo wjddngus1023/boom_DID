@@ -7,16 +7,13 @@ from indy.error import IndyError, ErrorCode
 
 from utils import get_pool_genesis_txn_path, PROTOCOL_VERSION
 
-import write_did_and_query_verkey as fn1
-import rotate_key as fn2
-import save_schema_and_cred_def as fn3
-import negotiate_proof as fn4
-import issue_credential as fn5
-import send_secure_msg as fn6
+import createledger as create_ledger
+import writedid as write_did
+import nymdid as nym_did
 
 from flask import Flask
 
-pool_name = 'BoomLedgerPool'
+pool_name = 'boonDID_pool'
 genesis_file_path = get_pool_genesis_txn_path(pool_name)
 
 wallet_config = json.dumps({"id": "wallet"})
@@ -33,38 +30,21 @@ app = Flask(__name__)
 async def main():
 	return "<h1>Hello world!</h1>"
 
+@app.route("/createledger")
+async def create_Ledger():
+	await create_ledger.createledger()
+	return "<h1>Create Ledger!</h1>"
+
 @app.route("/writedid")
-async def func1():
-	a = await fn1.write_nym_and_query_verkey()
+async def write_DID():
+	a = await write_did.writedid()
 	print(a)
 	return a
-
-@app.route("/rotatekey")
-async def func2():
-	await fn2.rotate_key_on_the_ledger()
-	return "<h1>rotate_key</h1>"
-
-@app.route("/saveschema")
-async def func3():
-	await fn3.write_schema_and_cred_def()
-	return "<h1>save schema</h1>"
-
-@app.route("/negotiate")
-async def func4():
-	await fn4.proof_negotiation()
-	return "<h1>negotiate<h1>"
-
-@app.route("/issuecredential")
-async def func5():
-	await fn5.issue_credential()
-	return "<h1>issue credential<h1>"
-
-@app.route("/sendmessage")
-def func6():
-	return "<h1>send message<h1>"
-
-
-
+@app.route("/nymdid")
+async def nym_DID():
+    b = await nym_did.nymdid()
+    print(b)
+    return b
 host_addr = "127.0.0.1"
 port_num = "8080"
 
