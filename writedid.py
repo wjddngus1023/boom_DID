@@ -1,6 +1,7 @@
 import asyncio
 import json
 import pprint
+import requests
 
 from indy import pool, ledger, wallet, did
 from indy.error import IndyError, ErrorCode
@@ -12,6 +13,9 @@ genesis_file_path = get_pool_genesis_txn_path(pool_name)
 
 wallet_config = json.dumps({"id": "wallet"})
 wallet_credentials = json.dumps({"key": "wallet_key"})
+
+#a = []
+
 
 def print_log(value_color="", value_noncolor=""):
     """set the colors for text."""
@@ -71,13 +75,20 @@ async def writedid():
         print_log('NYM transaction response: ')
         pprint.pprint(json.loads(nym_transaction_response))
 
+        datas = {'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
+
+        url = 'http://3.34.61.45:3001/signup'
+        response = requests.post(url, data=datas)
+		#print_log(datas)
+
         # 13.
         print_log('\n13. Closing wallet and pool\n')
         await wallet.close_wallet(wallet_handle)
         await pool.close_pool_ledger(pool_handle)
         print_log("writing DID is done :)")
-        return trust_anchor_did,trust_anchor_verkey
-		#return("your did : "+trust_anchor_did+"\n your Verkey : "+trust_anchor_verkey)
+        a = [trust_anchor_did, trust_anchor_verkey]
+		#return a
+        return("your did : "+trust_anchor_did+"\n your Verkey : "+trust_anchor_verkey)
     except IndyError as e:
          print('Error occurred: %s' % e)
 def main():

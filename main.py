@@ -39,7 +39,7 @@ async def create_Ledger():
 async def write_DID():
 	a = await write_did.writedid()
 	print(a)
-	return a
+	return c
 @app.route("/nymdid")
 async def nym_DID():
     b = await nym_did.nymdid()
