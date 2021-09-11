@@ -13,7 +13,7 @@ import nymdid as nym_did
 
 from flask import Flask
 
-pool_name = 'boonDID_pool'
+pool_name = 'boomDID_pool'
 genesis_file_path = get_pool_genesis_txn_path(pool_name)
 
 wallet_config = json.dumps({"id": "wallet"})
