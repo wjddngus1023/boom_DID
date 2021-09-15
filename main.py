@@ -40,9 +40,12 @@ async def write_DID():
 	a = await write_did.writedid()
 	print(a)
 	return c
-@app.route("/nymdid")
+@app.route("/nymdid",methods = ['POST'])
 async def nym_DID():
-    b = await nym_did.nymdid()
+    user_info = request.get_json()
+    user_did = user_info['user_DID']
+	user_verkey = user_info['user_verkey']
+    b = await nym_did.nymdid(user_did,user_verkey)
     print(b)
     return b
 host_addr = "127.0.0.1"

@@ -20,7 +20,7 @@ def print_log(value_color="", value_noncolor=""):
     print(HEADER + value_color + ENDC + str(value_noncolor))
 
 
-async def nymdid():
+async def nymdid(user_did,user_verkey):
     try:
         await pool.set_protocol_version(PROTOCOL_VERSION)
 
@@ -41,7 +41,7 @@ async def nymdid():
         # 10.
         print_log('\n10. Building the GET_NYM request to query trust anchor verkey\n')
         get_nym_request = await ledger.build_get_nym_request(submitter_did=client_did,
-                                                             target_did=trust_anchor_did)
+                                                             target_did=user_did)
         print_log('GET_NYM request: ')
         pprint.pprint(json.loads(get_nym_request))
 
@@ -56,10 +56,10 @@ async def nymdid():
         # 12.
         print_log('\n12. Comparing Trust Anchor verkey as written by Steward and as retrieved in GET_NYM '
                   'response submitted by Client\n')
-        print_log('Written by Steward: ', trust_anchor_verkey)
+        print_log('Written by Steward: ', user_verkey)
         verkey_from_ledger = json.loads(get_nym_response['result']['data'])['verkey']
         print_log('Queried from ledger: ', verkey_from_ledger)
-        print_log('Matching: ', verkey_from_ledger == trust_anchor_verkey)
+        print_log('Matching: ', verkey_from_ledger == user_verkey)
         # 13.
         print_log('\n13. Closing wallet and pool\n')
         await wallet.close_wallet(wallet_handle)
