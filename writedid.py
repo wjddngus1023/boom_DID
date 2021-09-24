@@ -2,6 +2,7 @@ import asyncio
 import json
 import pprint
 import requests
+import time
 
 from indy import pool, ledger, wallet, did
 from indy.error import IndyError, ErrorCode
@@ -75,11 +76,15 @@ async def writedid():
         print_log('NYM transaction response: ')
         pprint.pprint(json.loads(nym_transaction_response))
 
+        
+
         datas = {'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
 
-        url = 'http://3.34.61.45:3001/signup'
-        response = requests.post(url, data=datas)
-		#print_log(datas)
+        #url = 'http://52.78.45.227:3001/signup'
+        #response = requests.post(url, data=datas)
+        #print_log(datas)
+        
+        #return datas
 
         # 13.
         print_log('\n13. Closing wallet and pool\n')
@@ -87,7 +92,12 @@ async def writedid():
         await pool.close_pool_ledger(pool_handle)
         print_log("writing DID is done :)")
         a = [trust_anchor_did, trust_anchor_verkey]
-		#return a
+        #return a
+        
+        url = 'http://52.78.45.227:3001/signup'
+        response = requests.post(url, data=datas, timeout=3)
+        print_log(datas)
+
         return("your did : "+trust_anchor_did+"\n your Verkey : "+trust_anchor_verkey)
     except IndyError as e:
          print('Error occurred: %s' % e)
