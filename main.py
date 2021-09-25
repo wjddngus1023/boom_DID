@@ -11,7 +11,7 @@ import createledger as create_ledger
 import writedid as write_did
 import nymdid as nym_did
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 
 pool_name = 'boomDID_pool'
 genesis_file_path = get_pool_genesis_txn_path(pool_name)
@@ -32,7 +32,7 @@ def receiving_email():
 '''
 app = Flask(__name__)
 
-email = ""
+#email = ""
 
 @app.route("/")
 async def main():
@@ -48,19 +48,15 @@ async def write_DID():
 	a = await write_did.writedid()
 	return a
 
-@app.route("/nymdid",methods = ['POST'])
+@app.route("/nymdid",methods = ['GET'])
 async def nym_DID():
-    user_info = request.get_json()
-    user_did = user_info['user_DID']
-    user_verkey = user_info['user_verkey']
-    b = await nym_did.nymdid(user_did,user_verkey)
-    print(b)
-    return b
-@app.route("/postest", methods = ['POST','OPTIONS'])
+	#email = request.args.get('email')
+	#return email
+	b = await nym_did.nymdid()
+	return b
+@app.route("/postest", methods = ['GET','OPTIONS'])
 def test():
-	test1 = request.get_json()
-	email = test1['email']
-	print_log(email)
+	email = session['email']
 	return email
 host_addr = "127.0.0.1"
 port_num = "8080"
