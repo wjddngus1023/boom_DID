@@ -1,7 +1,6 @@
 import asyncio
 import json
 import pprint
-import requests
 
 from indy import pool,ledger,wallet,did,anoncreds
 from indy.error import IndyError, ErrorCode
@@ -12,7 +11,7 @@ import createledger as create_ledger
 import writedid as write_did
 import nymdid as nym_did
 
-from flask import Flask
+from flask import Flask, request, jsonify
 
 pool_name = 'boomDID_pool'
 genesis_file_path = get_pool_genesis_txn_path(pool_name)
@@ -25,7 +24,15 @@ def print_log(value_color="", value_noncolor=""):
 	ENDC = '\033[0m'
 	print(HEADER + value_color + ENDC + str(value_noncolor))
 
+'''
+def receiving_email():
+	user_info = request.get_json()
+	email = user_info['email']
+	return email
+'''
 app = Flask(__name__)
+
+email = ""
 
 @app.route("/")
 async def main():
@@ -38,13 +45,9 @@ async def create_Ledger():
 
 @app.route("/writedid", methods=["GET", "OPTIONS"])
 async def write_DID():
-	#url = "http://52.78.45.227:3001/signup"
 	a = await write_did.writedid()
-	#a.headers["Access-Control-Allow-Origin"] = 'http://52.78.45.227:3001/signup'
-	#response = requests(url, data=a)
-	print_log(a)
-	
 	return a
+
 @app.route("/nymdid",methods = ['POST'])
 async def nym_DID():
     user_info = request.get_json()
@@ -53,6 +56,12 @@ async def nym_DID():
     b = await nym_did.nymdid(user_did,user_verkey)
     print(b)
     return b
+@app.route("/postest", methods = ['POST','OPTIONS'])
+def test():
+	test1 = request.get_json()
+	email = test1['email']
+	print_log(email)
+	return email
 host_addr = "127.0.0.1"
 port_num = "8080"
 

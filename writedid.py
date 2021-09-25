@@ -3,6 +3,7 @@ import json
 import pprint
 import requests
 import time
+import pymysql
 
 from indy import pool, ledger, wallet, did
 from indy.error import IndyError, ErrorCode
@@ -15,8 +16,6 @@ genesis_file_path = get_pool_genesis_txn_path(pool_name)
 wallet_config = json.dumps({"id": "wallet"})
 wallet_credentials = json.dumps({"key": "wallet_key"})
 
-#a = []
-
 
 def print_log(value_color="", value_noncolor=""):
     """set the colors for text."""
@@ -25,8 +24,29 @@ def print_log(value_color="", value_noncolor=""):
     print(HEADER + value_color + ENDC + str(value_noncolor))
 
 
+
 async def writedid():
     try:
+        conn = pymysql.connect(host='boomtest.c5agrdksftaw.ap-northeast-2.rds.amazonaws.com',user='admin',password='admin2021',db='boomting',charset='utf8')
+
+        c = []
+
+        try:
+           with conn.cursor() as curs:
+              sql = "SELECT email FROM users"
+              curs.execute(sql)
+              rs = curs.fetchall()
+
+              for row in rs:
+                 for data in row:
+                    c.append(data)
+                    print(data)
+
+        #print_log(c[0])
+        finally:
+            conn.close()  
+        email = c[-1]
+
         await pool.set_protocol_version(PROTOCOL_VERSION)
         # 2.
         print_log('\n2. Open pool ledger and get handle from libindy\n')
@@ -78,13 +98,7 @@ async def writedid():
 
         
 
-        datas = {'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
-
-        #url = 'http://52.78.45.227:3001/signup'
-        #response = requests.post(url, data=datas)
-        #print_log(datas)
-        
-        #return datas
+        datas = {'email' : email, 'state':"resDID",'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
 
         # 13.
         print_log('\n13. Closing wallet and pool\n')
@@ -92,13 +106,8 @@ async def writedid():
         await pool.close_pool_ledger(pool_handle)
         print_log("writing DID is done :)")
         a = [trust_anchor_did, trust_anchor_verkey]
-        #return a
-        
-        url = 'http://52.78.45.227:3001/signup'
-        response = requests.post(url, data=datas, timeout=3)
-        print_log(datas)
 
-        return("your did : "+trust_anchor_did+"\n your Verkey : "+trust_anchor_verkey)
+        return datas
     except IndyError as e:
          print('Error occurred: %s' % e)
 def main():
