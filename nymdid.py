@@ -24,46 +24,6 @@ def print_log(value_color="", value_noncolor=""):
 async def nymdid():
     try:
 
-        conn = pymysql.connect(host='boomtest.c5agrdksftaw.ap-northeast-2.rds.amazonaws.com',user='admin',password='admin2021',db='boomting',charset='utf8')
-
-        c = []
-        c2 = []
-        try:
-           with conn.cursor() as curs:
-              sql = "SELECT email FROM users"
-              curs.execute(sql)
-              rs = curs.fetchall()
-
-              for row in rs:
-                 for data in row:
-                    c.append(data)
-                    print(data)
-
-        #print_log(c[0])
-        finally:
-           conn.close()
-        email = c[-1]
-
-        conn2 = pymysql.connect(host='boomtest.c5agrdksftaw.ap-northeast-2.rds.amazonaws.com',user='admin',password='admin2021',db='boomting',charset='utf8')
-
-        try:
-           with conn2.cursor() as curs2:
-
-               sql2 = "SELECT did,verkey FROM users WHERE email = '" + email + "'"
-               curs2.execute(sql2)
-               rs2 = curs2.fetchall()
-
-               for row2 in rs2:
-                   for data2 in row2:
-                       c2.append(data2)
-                       print(data2)
-
-        finally:
-             conn2.close()
-
-        user_did = c2[-2]
-        user_verkey = c2[-1]
-
         await pool.set_protocol_version(PROTOCOL_VERSION)
 
         # 2.

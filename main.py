@@ -50,17 +50,17 @@ async def write_DID():
 	#reponse = requests.post(url, data = datas)
 	return a
 
-@app.route("/nymdid", methods = ['GET'])
+@app.route("/nymdid", methods = ['POST'])
 async def nym_DID():
-	#email = request.args.get('email')
-	#return email
-	b = await nym_did.nymdid()
-	return b
+	if request.is_json:
+		user_info = request.get_json()
+		b = await nym_did.nymdid(user_info)
+		return b
 @app.route("/postest", methods = ['GET','OPTIONS'])
 def test():
 	email = session['email']
 	return email
-host_addr = "127.0.0.1"
+host_addr = "0.0.0.0"
 port_num = "8080"
 
 if __name__ == "__main__":
