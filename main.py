@@ -43,7 +43,7 @@ async def create_Ledger():
 	await create_ledger.createledger()
 	return "<h1>Create Ledger!</h1>"
 
-@app.route("/writedid", methods = ['GET', 'OPTIONS'])
+@app.route("/writedid", methods = ['GET'])
 async def write_DID():
 	a = await write_did.writedid()
 	#url = 'http://3.34.61.45:3001/signup'
@@ -53,14 +53,15 @@ async def write_DID():
 @app.route("/nymdid", methods = ['POST'])
 async def nym_DID():
 	if request.is_json:
-		user_info = request.get_json()
-		b = await nym_did.nymdid(user_info)
-		return b
+            user_info = request.get_json()
+            b = await nym_did.nymdid(user_info)
+            #print(user_info)
+            return b
 @app.route("/postest", methods = ['GET','OPTIONS'])
 def test():
 	email = session['email']
 	return email
-host_addr = "0.0.0.0"
+host_addr = "127.0.0.1"
 port_num = "8080"
 
 if __name__ == "__main__":

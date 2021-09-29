@@ -21,7 +21,10 @@ def print_log(value_color="", value_noncolor=""):
     print(HEADER + value_color + ENDC + str(value_noncolor))
 
 
-async def nymdid():
+async def nymdid(user_info):
+    
+    user_did = user_info["user_DID"]
+    user_verkey = user_info["user_verkey"]
     try:
 
         await pool.set_protocol_version(PROTOCOL_VERSION)
@@ -66,9 +69,12 @@ async def nymdid():
         print_log('\n13. Closing wallet and pool\n')
         await wallet.close_wallet(wallet_handle)
         await pool.close_pool_ledger(pool_handle)
-        
-        #return verkey_from_ledger == user_verkey
-        return("your nym request is done:)")
+
+        if verkey_from_ledger == user_verkey:
+            return "True"
+        else:
+            return "False"
+
     except IndyError as e:
         print('Error occurred: %s' % e)
 def main():
