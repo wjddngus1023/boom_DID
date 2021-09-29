@@ -33,7 +33,7 @@ async def writedid():
 
         try:
            with conn.cursor() as curs:
-              sql = "SELECT email FROM users"
+              sql = "SELECT MAX(no) FROM users"
               curs.execute(sql)
               rs = curs.fetchall()
 
@@ -45,7 +45,7 @@ async def writedid():
         #print_log(c[0])
         finally:
             conn.close()  
-        email = c[-1]
+        no = c[-1]
 
         await pool.set_protocol_version(PROTOCOL_VERSION)
         # 2.
@@ -98,7 +98,7 @@ async def writedid():
 
         
 
-        datas = {'email' : email, 'state':"resDID",'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
+        datas = {'no' : no,'state':"resDID" ,'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
 
         # 13.
         print_log('\n13. Closing wallet and pool\n')

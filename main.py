@@ -43,12 +43,14 @@ async def create_Ledger():
 	await create_ledger.createledger()
 	return "<h1>Create Ledger!</h1>"
 
-@app.route("/writedid", methods=["GET", "OPTIONS"])
+@app.route("/writedid", methods = ['GET', 'OPTIONS'])
 async def write_DID():
 	a = await write_did.writedid()
+	#url = 'http://3.34.61.45:3001/signup'
+	#reponse = requests.post(url, data = datas)
 	return a
 
-@app.route("/nymdid",methods = ['GET'])
+@app.route("/nymdid", methods = ['GET'])
 async def nym_DID():
 	#email = request.args.get('email')
 	#return email
