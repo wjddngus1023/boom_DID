@@ -21,11 +21,31 @@ def print_log(value_color="", value_noncolor=""):
     print(HEADER + value_color + ENDC + str(value_noncolor))
 
 
-async def nymdid(user_info):
+async def nymdid(email2):
     
-    user_did = user_info["user_DID"]
-    user_verkey = user_info["user_verkey"]
+    #user_did = user_info["user_DID"]
+    #user_verkey = user_info["user_verkey"]
     try:
+
+        conn = pymysql.connect(host='boomtest.c5agrdksftaw.ap-northeast-2.rds.amazonaws.com',user='admin',password='admin2021',db='boomting',charset='utf8')
+        email = email2["email"]
+        user_info = []
+
+        try:
+           with conn.cursor() as curs:
+              sql = "SELECT did,verkey FROM users WHERE email = %s"
+              curs.execute(sql, email)
+              rs = curs.fetchall()
+
+              for row in rs:
+                 for data in row:
+                    user_info.append(data)
+
+        finally:
+            conn.close()
+
+        user_did = user_info[0]
+        user_verkey = user_info[1]
 
         await pool.set_protocol_version(PROTOCOL_VERSION)
 

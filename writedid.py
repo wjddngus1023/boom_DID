@@ -25,27 +25,10 @@ def print_log(value_color="", value_noncolor=""):
 
 
 
-async def writedid():
+async def writedid(email):
     try:
-        conn = pymysql.connect(host='boomtest.c5agrdksftaw.ap-northeast-2.rds.amazonaws.com',user='admin',password='admin2021',db='boomting',charset='utf8')
 
-        c = []
-
-        try:
-           with conn.cursor() as curs:
-              sql = "SELECT MAX(no) FROM users"
-              curs.execute(sql)
-              rs = curs.fetchall()
-
-              for row in rs:
-                 for data in row:
-                    c.append(data)
-                    print(data)
-
-        #print_log(c[0])
-        finally:
-            conn.close()  
-        no = c[-1]
+        user_email = email["email"]
 
         await pool.set_protocol_version(PROTOCOL_VERSION)
         # 2.
@@ -98,14 +81,13 @@ async def writedid():
 
         
 
-        datas = {'no' : no,'state':"resDID" ,'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
+        datas = {'email' : user_email,'state':"resDID" ,'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
 
         # 13.
-        print_log('\n13. Closing wallet and pool\n')
+        print_log('\n13. Closing` wallet and pool\n')
         await wallet.close_wallet(wallet_handle)
         await pool.close_pool_ledger(pool_handle)
         print_log("writing DID is done :)")
-        a = [trust_anchor_did, trust_anchor_verkey]
 
         return datas
     except IndyError as e:
