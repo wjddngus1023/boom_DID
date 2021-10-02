@@ -83,6 +83,19 @@ async def writedid(email):
 
         datas = {'email' : user_email,'state':"resDID" ,'DID' : trust_anchor_did,'Verkey' : trust_anchor_verkey}
 
+        conn = pymysql.connect(host='boomtest.c5agrdksftaw.ap-northeast-2.rds.amazonaws.com',user='admin',password='admin2021',db='boomting',charset='utf8')
+        user_info = []
+
+        try:
+           with conn.cursor() as curs:
+              sql = "UPDATE users SET did = %s, verkey = %s WHERE email = %s"
+              curs.execute(sql, (trust_anchor_did, trust_anchor_verkey, user_email))
+              rs = curs.fetchall()
+              conn.commit()
+
+        finally:
+            conn.close()
+
         # 13.
         print_log('\n13. Closing` wallet and pool\n')
         await wallet.close_wallet(wallet_handle)
